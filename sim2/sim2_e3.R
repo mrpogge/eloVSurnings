@@ -44,8 +44,8 @@ for(nk in 1:length(K_s)){
                     Delta = Delta,
                     lq_baseline = lq_baseline,
                     uq_baseline = uq_baseline,
-                    m_p = 0,
-                    s_p = 1,
+                    m_p = mu_p,
+                    s_p = sigma_p,
                     OS = "MAC")
   
   #saving the results to the output files 

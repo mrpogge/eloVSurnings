@@ -39,7 +39,7 @@ for(nk in 1:length(Student_urn_size)){
   res = urningsHT(n_students = n_students,
                   n_items = n_items,
                   n_reps = n_reps_baseline,
-                  n_games = 1000,
+                  n_games = n_games,
                   student_urn_size = us,
                   item_urn_size = item_urn_size,
                   Theta = Theta,

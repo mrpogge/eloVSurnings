@@ -315,6 +315,7 @@ double Correct=0;
 double Incorrect=0;
 double L=0;
 int sumHT = 0;  
+double R =0.00;
 
 /*loop
 --------------------------------------------------------------------------*/
@@ -330,7 +331,7 @@ for(int g=0; g<games[0];g++){
                 Mp=0;
                 for(int s=0; s<M[0]; s++){
                     Mp += P[t[i]+s*M[0]]; //TODO: check if this is correct
-                    cumsum[s+1] = cumsum[s] + P[t[i]+s*M[0]];
+                    cumsum[s+1] = cumsum[s] + P[t[i]+s*(N[0]+1)];
                 }
                 p=runif(0,Mp);
                 j=0;
@@ -348,10 +349,11 @@ for(int g=0; g<games[0];g++){
 
             /*augment the urns*/
             t[i+r*N[0]] +=  x;
-
+            
             /*compute the probability x = 1*/
-            Correct = t[i+r*N[0]] *(1-expit(delta[j]));
-            Incorrect = (K_s[0]+1-t[i+r*N[0]])*delta[j];
+            R = (t[i+r*N[0]]*1.00)/(K_s[0]*1.00 + 1.00);
+            Correct = R * (1-expit(delta[j]));
+            Incorrect = (1-R)*expit(delta[j]);
             L = Correct/(Correct+Incorrect);
 
             /*generate the response*/

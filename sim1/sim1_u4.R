@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------------------
 library(tictoc)
 # load settings and functions
-source("sim2/sim2_settings.R")
+source("sim1/sim1_settings.R")
 source("algo/urnings_wrapper.R")
 
 Theta = Theta_matrix[,4]
@@ -36,21 +36,18 @@ for(nk in 1:length(Student_urn_size)){
   print(paste0("Running urn size = ", us))
   
   #running the system
-  res = urningsHT(n_students = n_students,
-                  n_items = n_items,
-                  n_reps = n_reps_baseline,
-                  n_games = n_games,
-                  student_urn_size = us,
-                  item_urn_size = item_urn_size,
-                  Theta = Theta,
-                  Delta = Delta,
-                  lq_baseline = lq_baseline,
-                  uq_baseline = uq_baseline,
-                  adaptive = 1,
-                  paired = 1,
-                  m_p = m_p,
-                  s_p = sigma_p,
-                  OS = "MAC")
+  res = urningsSimpleHT(n_students = n_students,
+                        n_items = n_items,
+                        n_reps = n_reps_baseline,
+                        n_games = n_games,
+                        student_urn_size = us,
+                        Theta = Theta,
+                        Delta = Delta,
+                        lq_baseline = lq_baseline,
+                        uq_baseline = uq_baseline,
+                        m_p = m_p,
+                        s_p = sigma_p,
+                        OS = "MAC")
   
   #saving the results to the output files 
   res_urnings[b_mse_urnings$urn_size == us, "HT"] = res$HT_student
@@ -59,8 +56,8 @@ for(nk in 1:length(Student_urn_size)){
 }
 
 #saving the output
-saveRDS(res_sys_urnings, "output/res2_sys_u4.RDS")
-saveRDS(res_urnings, "output/res2_u4.RDS")
+saveRDS(res_sys_urnings, "output/res1_sys_u4.RDS")
+saveRDS(res_urnings, "output/res1_u4.RDS")
 
 
 

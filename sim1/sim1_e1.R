@@ -3,14 +3,14 @@
 #-------------------------------------------------------------------------------
 library(tictoc)
 # load settings and functions
-source("sim2/sim2_settings.R")
+source("sim1/sim1_settings.R")
 source("algo/elo_wrapper.R")
 
 Theta = Theta_matrix[,1]
 mu_p = Mu_p[1]
 #load baselines
-b_mse_sys_elo = readRDS("output/b2_sys_e1.RDS")
-b_mse_elo = readRDS("output/b2_e1.RDS")
+b_mse_sys_elo = readRDS("output/b1_sys_e1.RDS")
+b_mse_elo = readRDS("output/b1_e1.RDS")
 
 #initialize containers
 res_sys_elo = matrix(0, ncol = 3, nrow = length(K_s))
@@ -34,19 +34,18 @@ for(nk in 1:length(K_s)){
   print(paste0("Running K = ", k))
   
   #running the system
-  res = eloDoubleHT(n_students = n_students,
-              n_items = n_items,
-              n_reps = n_reps_baseline,
-              n_games = n_games,
-              K_s = k,
-              K_i = K_i,
-              Theta = Theta,
-              Delta = Delta,
-              lq_baseline = lq_baseline,
-              uq_baseline = uq_baseline,
-              m_p = mu_p,
-              s_p = sigma_p,
-              OS = "MAC")
+  res = eloSimpleHT(n_students = n_students,
+                    n_items = n_items,
+                    n_reps = n_reps_baseline,
+                    n_games = n_games,
+                    K_s = k,
+                    Theta = Theta,
+                    Delta = Delta,
+                    lq_baseline = lq_baseline,
+                    uq_baseline = uq_baseline,
+                    m_p = mu_p,
+                    s_p = sigma_p,
+                    OS = "MAC")
   
   #saving the results to the output files 
   res_elo[b_mse_elo$K == k, "HT"] = res$HT_sys
@@ -55,5 +54,5 @@ for(nk in 1:length(K_s)){
 }
 
 #saving the output
-saveRDS(res_sys_elo, "output/res2_sys_e1.RDS")
-saveRDS(res_elo, "output/res2_e1.RDS")
+saveRDS(res_sys_elo, "output/res1_sys_e1.RDS")
+saveRDS(res_elo, "output/res1_e1.RDS")

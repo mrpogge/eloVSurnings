@@ -51,10 +51,6 @@ Student_urn_size = seq(10, 90, by = 2)
 #student K values
 K_s = seq(0.1,0.8, length.out = 41)
 
-#TODO: check the validity of such selection, for equal item variances.
-item_urn_size = 45
-K_i = 0.2
-
 #-------------------------------------------------------------------------------
 # util
 window_size = 200

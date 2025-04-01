@@ -231,3 +231,85 @@ baselineDoubleElo = function(n_students,
              Var_i = matrix(tmp[[15]],nrow = n_students, ncol = n_games))
   return(res)
 }
+
+#-------------------------------------------------------------------------------
+# Baseline simulation function for simple Elo
+#-------------------------------------------------------------------------------
+baselineSimpleElo = function(n_students,
+                             n_items,
+                             n_reps,
+                             n_games,
+                             K_s,
+                             Theta,
+                             Delta,
+                             m_p = 0,
+                             s_p = 1,
+                             OS = "MAC"){
+  #-----------------------------------------------------------------------------
+  # baselineDoubleElo: calculate the mean and variance of MSE of Elo based on the K and
+  # the abilties. NOTE: this require some further analysis to decide where MSE is stable.
+  #
+  # Arguments:
+  #   n_students: number of students (int)
+  #   n_items: number of items (int)
+  #   n_reps: number of replications (int)
+  #   n_games: number of games (int)
+  #   K_s: K for students (numeric)
+  #   K_i: K for items (numeric)
+  #   Theta: abilties (numeric[n_students))
+  #   Delta: difficulties (numeric[n_items])
+  #   adaptive: adaptivity (0-random or 1-adaptive)
+  #   m_p: mean parameter for the Normal Kernel Method (numeric)
+  #   s_p: standard deviation parameter for the Normal Kernel Method (numeric)
+  #   OS: operating system (MAC,WIN)
+  #   seeds: seeds for replications (numeric[n_reps])
+  #
+  # Output: 
+  #   res: [meanMSE matrix[n_students, n_games]]
+  #-----------------------------------------------------------------------------
+  
+  #-------------------------------------------------------------------------------
+  # loading the compiled C routines
+  #-------------------------------------------------------------------------------
+  
+  if(OS == "MAC"){
+    dyn.load("algo/elo_baseline.so")
+  } else if(OS == "WIN"){
+    dyn.load("algo/elo_baseline.dll")
+  }
+  
+  #-----------------------------------------------------------------------------
+  # setting adaptive item selection params
+  A = - 1/(2*s_p^2)
+  B = m_p/s_p^2
+  
+  #-----------------------------------------------------------------------------
+  # starting values  and containers
+  #NOTE: we start the algorithm for their true values so the algorithm converges faster
+  
+  theta_hat = rep(Theta,n_reps)
+  
+  mean_mse = rep(0,n_students*n_games)
+  
+  tmp<-.C("elo_simple_baseline",
+          as.double(K_s),
+          as.integer(n_reps),
+          as.integer(n_games),
+          as.integer(n_students),
+          as.integer(n_items),
+          as.double(Theta),
+          as.double(Delta),
+          as.double(theta_hat),
+          as.double(mean_mse),
+          as.double(mean_mse),
+          as.double(mean_mse),
+          as.double(A),
+          as.double(B),
+          as.double(c(0:n_items+1)))
+  
+  res = list(Theta = Theta, 
+             MSE_i = matrix(tmp[[9]],nrow = n_students, ncol = n_games),
+             M_i = matrix(tmp[[10]],nrow = n_students, ncol = n_games),
+             Var_i = matrix(tmp[[11]],nrow = n_students, ncol = n_games))
+  return(res)
+}
